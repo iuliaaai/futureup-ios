@@ -7,9 +7,14 @@
 
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct DashboardScreen: View {
     // MARK: - Properties
     @State var showScreen: Bool = false
+    @State var showDescription: Bool = false
+    @State var selected = ""
+    @State var description = ""
+    
     @EnvironmentObject var viewModel: HomeViewModel
 
     // MARK: - Body
@@ -34,6 +39,7 @@ struct DashboardScreen: View {
                 .opacity(showScreen ? 1 : 0)
                 .animation(.easeInOut)
                 .statusBar(hidden: true)
+            
         }
     }
 
@@ -59,6 +65,16 @@ struct DashboardScreen: View {
                     ForEach(viewModel.allCoins, id: \.tagID) { cryptoCoin in
                         LivePriceCardView(title: cryptoCoin.name, value: cryptoCoin.currentPrice, percentage: cryptoCoin.priceChangePercentage24H ?? 0, imageUrl: cryptoCoin.image)
                             .environmentObject(viewModel)
+                            .onTapGesture {
+                                showDescription = true
+                                viewModel.getCoinsDescriptionWithURLSession(id: cryptoCoin.id)
+                                selected = viewModel.allDescriptions.description.en
+                                description = cryptoCoin.name + " description"
+                            }
+                            .sheet(isPresented: $showDescription){
+                                CoinDescriptionView(title: description, text: viewModel.allDescriptions.description.en)
+                            }
+
                     }
                 }
             }
@@ -74,4 +90,5 @@ struct DashboardScreen: View {
                 .withCardModifierBack()
         }
     }
+    
 }

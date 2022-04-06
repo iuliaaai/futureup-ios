@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 15.0, *)
 struct SplashScreen: View {
     @StateObject var viewModel = HomeViewModel()
     @State var showDashboard: Bool = false
@@ -26,6 +27,7 @@ struct SplashScreen: View {
     }
 }
 
+@available(iOS 15.0, *)
 struct SplashScreen_Previews: PreviewProvider {
     static var previews: some View {
         SplashScreen()

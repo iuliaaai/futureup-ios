@@ -17,6 +17,7 @@ class HomeViewModel: ObservableObject {
     
     @Published var allCoins: [CryptoCoinModel] = []
     @Published var isLoading: Bool = true
+    @Published var allDescriptions: Request = Request(description: CryptoCoinDescriptionModel(), id: "bitcoin")
     
     init() {
         getCoinsWithURLSession()
@@ -40,6 +41,25 @@ class HomeViewModel: ObservableObject {
                     // Decoded data using CryptoCoinModel
                     self?.allCoins = decodedCoins
                     self?.isLoading = false
+                }
+            } else {
+                print("No data returned.")
+            }
+        }
+    }
+    
+    func getCoinsDescriptionWithURLSession(id: String) {
+        guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false") else { return }
+        
+         
+        downloadData(fromURL: url) { returnedData in
+            if let data = returnedData {
+                guard let decodedDescriptions = try? JSONDecoder().decode(Request.self, from: data) else { return }
+                DispatchQueue.main.async { [weak self] in
+                    
+                    // Decoded data using CryptoCoinDescriptionModel
+                    self?.allDescriptions = decodedDescriptions
+
                 }
             } else {
                 print("No data returned.")

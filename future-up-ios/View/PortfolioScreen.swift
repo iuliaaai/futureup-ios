@@ -11,27 +11,57 @@ struct PortfolioScreen: View {
     // MARK: - Properties
     @EnvironmentObject var viewModel: HomeViewModel
     @Binding var showScreen: Bool
+    @State var showCoinSelection: Bool = false
+    @State var selected = ""
     
     // MARK: - Body
     var body: some View {
-        VStack(alignment: .leading, spacing: UIViewConstants.padding) {
-            topBar
-            
-            Text(UIViewConstants.Portfolio.portfolioTitle).padding(.leading, UIViewConstants.padding)
-            
-            ScrollView {
-                VStack(spacing: UIViewConstants.padding) {
-                    
-                    // TO DO - view only coins from your wallet w/ ForEach
-                    // Update 'value'
-                    MyCoinPortfolioView(title: myCoin.name, abbreviation: myCoin.symbol, marketValue: myCoin.currentPrice, value: 1, imageUrl: myCoin.image)
+            VStack(alignment: .leading, spacing: UIViewConstants.padding) {
+                topBar
+                
+                Text(UIViewConstants.Portfolio.portfolioTitle).padding(.leading, UIViewConstants.padding)
+                
+                ScrollView {
+                    VStack(spacing: UIViewConstants.padding) {
+                        // TO DO - view only coins from your wallet w/ ForEach
+                        // Update 'value'
+                        ForEach(viewModel.allCoins, id: \.tagID) { item in
+                            MyCoinPortfolioView(title: item.name, abbreviation: item.symbol, marketValue: item.currentPrice, value: 1, imageUrl: item.image)
+                        }
+                    }
                 }
+                .padding(.leading, UIViewConstants.padding)
+                .shadow(color: Color.black.opacity(0.15), radius: 5, x: 0.0, y: 1.0)
+                
+                HStack{
+                    Spacer()
+                    Button(action: {
+                        showCoinSelection = true
+                    
+                    }, label: {
+                        Text("+ Add new coins")
+                            .padding()
+                            .frame(width: 200, height: 50)
+                            .foregroundColor(Color.white)
+                            .background(Color.init(red:0.455, green: 0.447, blue: 0.871))
+                            .cornerRadius(20)
+                    })
+                    .padding()
+                    Spacer()
+                }
+               
+                
+                if(showCoinSelection){
+                    CoinSelectionView()
+                    .onTapGesture {
+                        showCoinSelection = false
+                    }
+                }
+            
             }
-            .padding(.leading, UIViewConstants.padding)
-            .shadow(color: Color.black.opacity(0.15), radius: 5, x: 0.0, y: 1.0)
-        }
-        .background(Color("background").ignoresSafeArea(.all))
-        .ignoresSafeArea(.all, edges: .top)
+            .background(Color("background").ignoresSafeArea(.all))
+            .ignoresSafeArea(.all, edges: .top)
+            
     }
     
     // MARK: - Private
