@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Metal
 
 struct CryptoCoinDescriptionModel : Codable {
     let en: String

@@ -11,19 +11,20 @@ import SwiftUI
 struct CoinDescriptionView: View{
     var title: String
     var text: String
-    @State private var showDescription = false
+    @Binding var showDescription: Bool
     
     @Environment(\.presentationMode) var presentationMode
     var body: some View {
         VStack(spacing: 5){
-            HStack(spacing: UIViewConstants.padding){
+            HStack(){
                 Text(title)
                     .fontWeight(.semibold)
                     .background(Color.white)
-
+                    .padding(10)
+                Spacer()
                 Button(
                     action: {
-                        presentationMode.wrappedValue.dismiss()
+                        showDescription.toggle()
                     },
                     label: {
                         Text("X")
@@ -32,10 +33,15 @@ struct CoinDescriptionView: View{
                             .cornerRadius(50)
                             .foregroundColor(.black)
                     })
+                    .padding(10)
+                
             }
-            Text(text)
-                .foregroundColor(Color.black)
-                .background(Color.white)
+            ScrollView {
+                Text(text)
+                    .foregroundColor(Color.black)
+                    .background(Color.white)
+                    .padding(10)
+            }
         }
         .frame(width: 300, height: 400, alignment: .center)
         .foregroundColor(Color.black)

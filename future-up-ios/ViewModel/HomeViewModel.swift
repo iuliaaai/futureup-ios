@@ -12,21 +12,31 @@ class HomeViewModel: ObservableObject {
     
     // MARK: - Properties
     // TO DO - Store final-balance and all my crypto coins
-    // @Published var allCoins: [CryptoCoinModel] = [] -> Update CryptoCoinModel
-    // @Published var finalBalance: Double = 0.0
+//    @Published var allCoins: [CryptoCoinModel] = [] -> Update CryptoCoinModel
+    @Published var finalBalance: Double = 0.0
     
     @Published var allCoins: [CryptoCoinModel] = []
     @Published var isLoading: Bool = true
     @Published var allDescriptions: Request = Request(description: CryptoCoinDescriptionModel(), id: "bitcoin")
+    @Published var wallet: [CryptoCoinModel] = []
     
     init() {
         getCoinsWithURLSession()
         reloadAllMyCoins()
+        
     }
     
     func reloadAllMyCoins() {} // Fetch your coins from wallet
     
     func storeAllMyCoins() {} // Store your coins to wallet
+    
+    func updateWallet() {
+        for coin in allCoins{
+            if coin.valueCurrentHoldings != 0{
+                wallet.append(coin)
+            }
+        }
+    }
         
     // Download data using URLSession
     

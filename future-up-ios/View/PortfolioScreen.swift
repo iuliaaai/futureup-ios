@@ -13,9 +13,11 @@ struct PortfolioScreen: View {
     @Binding var showScreen: Bool
     @State var showCoinSelection: Bool = false
     @State var selected = ""
+    @State var convertedValue: Double
     
     // MARK: - Body
     var body: some View {
+        ZStack{
             VStack(alignment: .leading, spacing: UIViewConstants.padding) {
                 topBar
                 
@@ -25,13 +27,17 @@ struct PortfolioScreen: View {
                     VStack(spacing: UIViewConstants.padding) {
                         // TO DO - view only coins from your wallet w/ ForEach
                         // Update 'value'
-                        ForEach(viewModel.allCoins, id: \.tagID) { item in
-                            MyCoinPortfolioView(title: item.name, abbreviation: item.symbol, marketValue: item.currentPrice, value: 1, imageUrl: item.image)
+                        
+                        ForEach(viewModel.wallet, id: \.tagID) { item in
+                            MyCoinPortfolioView(title: item.name, abbreviation: item.symbol, marketValue: item.currentPrice, value: item.valueCurrentHoldings ?? 0, imageUrl: item.image)
+
                         }
+                        
                     }
                 }
                 .padding(.leading, UIViewConstants.padding)
                 .shadow(color: Color.black.opacity(0.15), radius: 5, x: 0.0, y: 1.0)
+                
                 
                 HStack{
                     Spacer()
@@ -48,21 +54,21 @@ struct PortfolioScreen: View {
                     })
                     .padding()
                     Spacer()
-                }
-               
-                
-                if(showCoinSelection){
-                    CoinSelectionView()
-                    .onTapGesture {
-                        showCoinSelection = false
                     }
+                    
                 }
             
             }
             .background(Color("background").ignoresSafeArea(.all))
             .ignoresSafeArea(.all, edges: .top)
             
-    }
+        CoinSelectionView(showCoinSelection: $showCoinSelection, value: "", currentPrice: 0, convertedValue: $convertedValue)
+                .padding(.top, 300)
+                .offset(y: showCoinSelection ? 0 : UIScreen.main.bounds.height)
+                .animation(.spring())
+        }
+            
+            
     
     // MARK: - Private
     private var topBar: some View {

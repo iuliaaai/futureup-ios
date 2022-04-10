@@ -28,7 +28,7 @@ struct MyCoinPortfolioView: View {
                     Text(abbreviation).font(.caption).fontWeight(.light)
                 }
                 Spacer()
-                Text(String(format: "%.4f", value)).font(.caption).fontWeight(.light)
+                Text(String(format: "%.2f", value)).font(.caption).fontWeight(.light)
             }
         }
         .padding(UIViewConstants.padding)
@@ -37,4 +37,5 @@ struct MyCoinPortfolioView: View {
         .background(Color.white)
         .cornerRadius(20)
     }
+    
 }

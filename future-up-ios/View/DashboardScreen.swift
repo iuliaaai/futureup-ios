@@ -35,10 +35,14 @@ struct DashboardScreen: View {
             }
             .background(Color("background"))
 
-            PortfolioScreen(showScreen: $showScreen).environmentObject(viewModel)
+            PortfolioScreen(showScreen: $showScreen, convertedValue: 0).environmentObject(viewModel)
                 .opacity(showScreen ? 1 : 0)
                 .animation(.easeInOut)
                 .statusBar(hidden: true)
+            
+            CoinDescriptionView(title: description, text: viewModel.allDescriptions.description.en, showDescription: $showDescription)
+                .offset(y: showDescription ? 0 : UIScreen.main.bounds.height)
+                .animation(.spring())
             
         }
     }
@@ -70,9 +74,6 @@ struct DashboardScreen: View {
                                 viewModel.getCoinsDescriptionWithURLSession(id: cryptoCoin.id)
                                 selected = viewModel.allDescriptions.description.en
                                 description = cryptoCoin.name + " description"
-                            }
-                            .sheet(isPresented: $showDescription){
-                                CoinDescriptionView(title: description, text: viewModel.allDescriptions.description.en)
                             }
 
                     }
